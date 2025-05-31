@@ -7,16 +7,16 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
-  }
+}
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', system-ui, sans-serif;
-  }
+}
 }
 
 @layer components {
   .btn-primary {
     @apply rounded-full bg-jcas-primary px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-jcas-dark transition duration-300;
-  }
+}
   .btn-secondary {
     @apply rounded-full bg-white px-6 py-2 text-sm font-semibold text-jcas-dark shadow-sm ring-1 ring-inset ring-jcas-accent hover:bg-jcas-light transition duration-300;
   }

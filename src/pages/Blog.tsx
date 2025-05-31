@@ -1,70 +1,51 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-
-const posts = [
-  {
-    id: 1,
-    title: 'Understanding the U.S. Immigration Process',
-    description: 'A comprehensive guide to navigating the complex U.S. immigration system and its various pathways to legal status.',
-    date: 'March 15, 2024',
-    category: 'Immigration Guide',
-    author: 'Jessie C.A. Samura, Esq.',
-    readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 2,
-    title: 'Recent Changes in Immigration Policy',
-    description: 'Stay informed about the latest updates and changes in U.S. immigration policy and how they might affect your case.',
-    date: 'March 10, 2024',
-    category: 'Policy Updates',
-    author: 'Legal Team',
-    readTime: '6 min read',
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 3,
-    title: 'Success Story: From Visa to Citizenship',
-    description: 'Read about how one of our clients successfully navigated the path from temporary visa to full U.S. citizenship.',
-    date: 'March 5, 2024',
-    category: 'Success Stories',
-    author: 'Client Relations Team',
-    readTime: '5 min read',
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 4,
-    title: 'Common Immigration Mistakes to Avoid',
-    description: 'Learn about the most common mistakes people make during the immigration process and how to avoid them.',
-    date: 'February 28, 2024',
-    category: 'Tips & Advice',
-    author: 'Jessie C.A. Samura, Esq.',
-    readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1590087986431-72b0f33b8e66?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 5,
-    title: 'Family-Based Immigration: What You Need to Know',
-    description: 'A detailed guide to family-based immigration, including eligibility requirements and application processes.',
-    date: 'February 20, 2024',
-    category: 'Immigration Guide',
-    author: 'Legal Team',
-    readTime: '10 min read',
-    image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 6,
-    title: 'Preparing for Your Immigration Interview',
-    description: 'Essential tips and guidance on how to prepare for your immigration interview and increase your chances of success.',
-    date: 'February 15, 2024',
-    category: 'Tips & Advice',
-    author: 'Jessie C.A. Samura, Esq.',
-    readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  },
-];
+import { useEffect, useState } from 'react';
+import { getImmigrationNews } from '../services/newsService';
+import type { NewsArticle } from '../services/newsService';
+import Testimonials from '../components/Testimonials';
 
 export default function Blog() {
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const articles = await getImmigrationNews();
+        setNews(articles);
+        if (articles && articles.length > 0 && articles[0]) {
+          setSelectedArticle(articles[0]); // Show first article by default
+        }
+      } catch (err) {
+        setError('Failed to load immigration news');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-jcas-light">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-jcas-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-jcas-light">
+        <div className="text-center py-12 text-gray-600">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -87,56 +68,84 @@ export default function Blog() {
         </div>
       </div>
 
-      {/* Blog Posts Grid */}
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <motion.article
-              key={post.id}
-              className="flex flex-col items-start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <div className="relative w-full">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
-                />
-                <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10" />
-              </div>
-              <div className="max-w-xl">
-                <div className="mt-8 flex items-center gap-x-4 text-xs">
-                  <time dateTime={post.date} className="text-gray-500">
-                    {post.date}
-                  </time>
-                  <span className="relative z-10 rounded-full bg-jcas-accent px-3 py-1.5 font-medium text-gray-600">
-                    {post.category}
-                  </span>
-                </div>
-                <div className="group relative">
-                  <h3 className="mt-3 text-lg font-semibold leading-6 text-jcas-dark">
-                    <Link to={`/blog/${post.id}`}>
-                      <span className="absolute inset-0" />
-                      {post.title}
-                    </Link>
-                  </h3>
-                  <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                    {post.description}
-                  </p>
-                </div>
-                <div className="mt-6 flex items-center gap-x-4">
-                  <div className="text-sm leading-6">
-                    <p className="font-semibold text-jcas-dark">{post.author}</p>
-                    <p className="text-gray-600">{post.readTime}</p>
+      {/* News Section */}
+      <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div className="lg:flex lg:gap-x-12">
+          {/* Article List Sidebar */}
+          <div className="lg:w-1/3">
+            <h2 className="text-2xl font-bold text-jcas-dark mb-8">Latest Articles</h2>
+            <div className="space-y-6">
+              {news.map((article, index) => (
+                <motion.article
+                  key={article.url}
+                  className={`cursor-pointer p-4 rounded-lg transition-colors duration-300 ${
+                    selectedArticle?.url === article.url
+                      ? 'bg-jcas-accent'
+                      : 'hover:bg-jcas-light'
+                  }`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={() => setSelectedArticle(article)}
+                >
+                  <h3 className="font-semibold text-jcas-dark mb-2">{article.title}</h3>
+                  <div className="flex items-center gap-x-4 text-xs">
+                    <time dateTime={new Date(article.publishedAt).toISOString()} className="text-gray-500">
+                      {new Date(article.publishedAt).toLocaleDateString()}
+                    </time>
+                    <span className="text-jcas-primary">{article.source.name}</span>
                   </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+
+          {/* Selected Article Content */}
+          {selectedArticle && (
+            <motion.div
+              className="lg:w-2/3 mt-12 lg:mt-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              key={selectedArticle.url}
+            >
+              <div className="prose prose-lg max-w-none">
+                <h2 className="text-3xl font-bold text-jcas-dark mb-6">{selectedArticle.title}</h2>
+                {selectedArticle.urlToImage && (
+                  <img
+                    src={selectedArticle.urlToImage}
+                    alt={selectedArticle.title}
+                    className="w-full h-[400px] object-cover rounded-2xl mb-8"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                    }}
+                  />
+                )}
+                <div className="flex items-center gap-x-4 text-sm mb-8">
+                  <time dateTime={new Date(selectedArticle.publishedAt).toISOString()} className="text-gray-500">
+                    {new Date(selectedArticle.publishedAt).toLocaleDateString()}
+                  </time>
+                  <span className="text-jcas-primary">{selectedArticle.source.name}</span>
                 </div>
+                <p className="text-gray-600 mb-6">{selectedArticle.description}</p>
+                {selectedArticle.url && (
+                  <a
+                    href={selectedArticle.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-8 text-jcas-primary hover:text-jcas-dark font-semibold"
+                  >
+                    Read full article on {selectedArticle.source.name} →
+                  </a>
+                )}
               </div>
-            </motion.article>
-          ))}
+            </motion.div>
+          )}
         </div>
       </div>
+
+      {/* Testimonials Section */}
+      <Testimonials />
     </div>
   );
 } 

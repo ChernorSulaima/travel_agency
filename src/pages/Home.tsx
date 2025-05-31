@@ -8,6 +8,8 @@ import {
   DocumentTextIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
+import NewsSection from '../components/NewsSection';
+import Testimonials from '../components/Testimonials';
 
 const services = [
   {
@@ -42,27 +44,9 @@ const services = [
   },
 ];
 
-const testimonials = [
-  {
-    content: "JCAS helped me achieve my dream of becoming a U.S. citizen. I couldn't have done it without their expertise and support.",
-    author: "Maria R.",
-    role: "Naturalized U.S. Citizen"
-  },
-  {
-    content: "Professional, knowledgeable, and caring. They guided us through the entire green card process with confidence.",
-    author: "James & Sarah L.",
-    role: "Permanent Residents"
-  },
-  {
-    content: "When I faced deportation, JCAS fought for my rights and helped me stay with my family. Forever grateful.",
-    author: "Carlos M.",
-    role: "Client"
-  }
-];
-
 export default function Home() {
   return (
-    <div>
+    <>
       {/* Hero Section */}
       <div className="relative isolate overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
@@ -136,36 +120,11 @@ export default function Home() {
         </div>
       </div>
 
+      {/* News Section */}
+      <NewsSection />
+
       {/* Testimonials Section */}
-      <div className="bg-jcas-accent py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-jcas-dark sm:text-4xl">
-              Client Testimonials
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Hear from our satisfied clients about their experience with JCAS
-            </p>
-          </div>
-          <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col justify-between bg-white p-6 shadow-md rounded-2xl"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-              >
-                <blockquote className="text-gray-600">"{testimonial.content}"</blockquote>
-                <div className="mt-6">
-                  <p className="font-semibold text-jcas-dark">{testimonial.author}</p>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+      <Testimonials />
+    </>
   );
 } 

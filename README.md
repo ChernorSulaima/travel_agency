@@ -7,7 +7,6 @@ A modern, responsive website built with React, TypeScript, and Tailwind CSS for 
 - Modern UI with custom color scheme
 - Responsive design
 - Interactive components
-- Admin dashboard
 - Blog system
 - Contact form
 - Service showcase
